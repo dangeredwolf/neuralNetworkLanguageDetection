@@ -165,9 +165,9 @@ void draw(){
 
   text(s,ex,150);
   textFont(font2,36);
-  if (brain.confidence > .55) {
+  if (brain.confidence > .75) {
     fill(20,140,50);
-  } else if (brain.confidence > .15) {
+  } else if (brain.confidence > .25) {
     fill(180,180,20);
   } else {
     fill(220,20,20);
@@ -189,12 +189,24 @@ void draw(){
 
   textFont(font,36);
   fill(128);
-
-  text("1) Toggle Training",ex,900);
+  
+  if (training) {
+    fill(0);
+  }
+  if (stopOnError) {
+    text("1) Train Until Incorrect",ex,900);
+  } else {
+    text("1) Toggle Training",ex,900);
+  }
+  fill(128);
   text("2) Perform one Training",ex,950);
   text("3) Decrease Step Size",ex,1000);
   text("4) Increase Step Size",ex,1050);
+  if (stopOnError) {
+    fill(0);
+  }
   text("5) Stop at Incorrect",ex,1100);
+  fill(128); // neutralise it basically
 
   translate(550,40);
   brain.drawBrain(55);
