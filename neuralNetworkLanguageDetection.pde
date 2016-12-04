@@ -1,3 +1,5 @@
+boolean processing3 = true;
+
 float WINDOW_SCALE_SIZE = 0.5;
 int MINIMUM_WORD_LENGTH = 5;
 float STARTING_AXON_VARIABILITY = 1.0;
@@ -19,6 +21,8 @@ boolean[] recentGuesses = new boolean[guessWindow];
 int recentRightCount = 0;
 boolean training = false;
 String word = "-";
+int bestStreak = 0;
+int streak = 0;
 int desiredOutput = 0;
 int lastPressedKey = -1;
 boolean typing = false;
@@ -29,6 +33,7 @@ boolean lastOneWasCorrect = false;
 String[] languages = {"Random","Key Mash","English","Spanish","French","German","Japanese",
 "Swahili","Mandarin","Esperanto","Dutch","Polish","Lojban"};
 int[] langSizes = new int[LANGUAGE_COUNT];
+
 void setup(){
   for(int i = 0; i < LANGUAGE_COUNT; i++){
     trainingData[i] = loadStrings("output"+i+".txt");
@@ -42,12 +47,24 @@ void setup(){
   font2 = loadFont("SegoeUI-Bold-48.vlw");
   int[] bls = {INPUT_LAYER_HEIGHT,MIDDLE_LAYER_NEURON_COUNT,OUTPUT_LAYER_HEIGHT};
   brain = new Brain(bls,INPUTS_PER_CHAR, languages);
-  size(1000,580);
+  int SIZEX = (int)(WINDOW_SCALE_SIZE * 1000);
+  int SIZEY = (int)(WINDOW_SCALE_SIZE * 580);
+  size(1000, 580);
+  if (processing3) {
+    size(1000, 580);
+    surface.setResizable(true);
+    surface.setSize(SIZEX,SIZEY);
+  } else {
+    size(SIZEX,SIZEY);
+  }
+  
   frameRate(120);
+  surface.setTitle("Cary's Language Neutral Network (Updated by @dangeredwolf)");
 }
 
 void draw(){
   scale(WINDOW_SCALE_SIZE);
+  smooth(1);
   if(keyPressed){
     int c = (int)(key);
     if(c == 49 && lastPressedKey != 49){
@@ -62,6 +79,8 @@ void draw(){
     }else if(c == 53 && lastPressedKey != 53){
       stopOnError = !stopOnError;
       stopTraining = false;
+    }else if(c == 54 && lastPressedKey != 54){
+      // todo: stuff
     }else if(c == 51 && lastPressedKey != 51){
       brain.alpha *= 0.5;
     }else if(c >= 97 && c <= 122 && !(lastPressedKey >= 97 && lastPressedKey <= 122)){
@@ -95,44 +114,41 @@ void draw(){
     }
   }
   background(255);
-  fill(0);
-  textFont(font2,36);
   textAlign(LEFT);
-  text("Language Neural Network",20,50);
   fill(128);
   textFont(font,36);
-  text("Iteration",20,150);
+  text("Iteration",20,50);
   textFont(font2,48);
   fill(0);
-  text(iteration,200,155);
+  text(iteration,200,55);
   fill(128);
   textFont(font,36);
-  text("Input",20,250);
+  text("Input",20,150);
   textFont(font2,48);
   fill(0,120,255);
-  text(word,130,253);
+  text(word,130,153);
   fill(128);
   textFont(font,36);
-  text("Output",20,350);
+  text("Output",20,250);
   String o = languages[desiredOutput];
   if(typing){
     o = "Input";
   }
   fill(0,120,255);
   textFont(font2,48);
-  text(o,155,355);
+  text(o,155,255);
   fill(128);
   textFont(font,36);
-  text("Step",20,450);
+  text("Step",20,350);
   textFont(font2,48);
   fill(0);
-  text(nf((float)(brain.alpha),0,4),120,455);
+  text(nf((float)(brain.alpha),0,4),120,355);
   fill(128);
   textFont(font,36);
-  text("Min Length",20,550);
+  text("Min Length",20,450);
   fill(0);
   textFont(font2,48);
-  text(MINIMUM_WORD_LENGTH,220,557);
+  text(MINIMUM_WORD_LENGTH,220,457);
   for(int i = 0; i < countedLanguages.length; i++){
     text(languages[countedLanguages[i]],20,1130-i*55);
   }
@@ -181,6 +197,21 @@ void draw(){
   textFont(font2,48);
   fill(0);
   text(percentify(((float)recentRightCount)/min(iteration,guessWindow)),ex,350);
+  
+  
+  fill(128);
+  textFont(font,36);
+  text("Current Streak",ex,430);
+  textFont(font2,48);
+  fill(0);
+  text(streak,ex,480);
+  
+  fill(128);
+  textFont(font,36);
+  text("Best Streak",ex,530);
+  textFont(font2,48);
+  fill(0);
+  text(bestStreak,ex,580);
 
   textFont(font2,36);
 
@@ -206,7 +237,7 @@ void draw(){
     fill(0);
   }
   text("5) Stop at Incorrect",ex,1100);
-  fill(128); // neutralise it basically
+  fill(128); // neutralise it basically if stop on error is enabled
 
   translate(550,40);
   brain.drawBrain(55);
@@ -229,6 +260,11 @@ void train(){
     }
     recentGuesses[iteration%guessWindow] = true;
     lastOneWasCorrect = true;
+    streak++;
+    
+    if (streak > bestStreak) {
+      bestStreak = streak;
+    }
   }else{
     if(recentGuesses[iteration%guessWindow]){
       recentRightCount--;
@@ -238,6 +274,7 @@ void train(){
     if (stopOnError) {
       stopTraining = true;
     }
+    streak = 0;
   }
 }
 int binarySearch(int lang, int n){
