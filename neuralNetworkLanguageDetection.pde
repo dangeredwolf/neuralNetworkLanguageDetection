@@ -20,6 +20,8 @@ String[] languages = {
   "Lojban"    // 12
 };
 
+int[] countedLanguages = {3, 1};
+
 float STARTING_AXON_VARIABILITY = 1.0;
 float WINDOW_SCALE_SIZE = 0.5;
 
@@ -41,7 +43,6 @@ String word = "-";
 String windowText = "Cary's Language Neutral Network (Updated by @dangeredwolf)";
 
 String[][] trainingData = new String[LANGUAGE_COUNT][];
-int[] countedLanguages = {3, 1};
 int[] langSizes = new int[LANGUAGE_COUNT];
 
 int bestStreak = 0;
