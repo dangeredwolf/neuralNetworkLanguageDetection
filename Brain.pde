@@ -121,7 +121,7 @@ class Brain {
     ellipseMode(RADIUS);
     strokeWeight(3);
     textAlign(CENTER);
-    textFont(font,0.53*scaleUp);
+    textFont(regularFont,0.53*scaleUp);
     for(int x = 0; x < BRAIN_LAYER_SIZES.length-1; x++){
       for(int y = 0; y < BRAIN_LAYER_SIZES[x]; y++){
         for(int z = 0; z < BRAIN_LAYER_SIZES[x+1]-1; z++){
@@ -197,11 +197,11 @@ class Brain {
   public color neuronFillColor(double d){
     return color((float)(d*255),(float)(d*255),(float)(d*255));
   }
+  
   public color neuronTextColor(double d){
-    if(d >= 0.5){
+    if(d >= 0.5)
       return color(0,0,0);
-    }else{
       return color(200,200,200);
-    }
   }
+  
 }
