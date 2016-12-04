@@ -47,11 +47,11 @@ void setup(){
   font2 = loadFont("SegoeUI-Bold-48.vlw");
   int[] bls = {INPUT_LAYER_HEIGHT,MIDDLE_LAYER_NEURON_COUNT,OUTPUT_LAYER_HEIGHT};
   brain = new Brain(bls,INPUTS_PER_CHAR, languages);
-  int SIZEX = (int)(WINDOW_SCALE_SIZE * 2000);
-  int SIZEY = (int)(WINDOW_SCALE_SIZE * 1160);
-  size(1000, 580);
+  int SIZEX = (int)(WINDOW_SCALE_SIZE * 1920);
+  int SIZEY = (int)(WINDOW_SCALE_SIZE * 1080);
+  size(960, 540);
   if (processing3) {
-    size(1000, 580);
+    size(960, 540); 
     surface.setResizable(true);
     surface.setSize(SIZEX,SIZEY);
     surface.setResizable(false);
@@ -151,11 +151,11 @@ void draw(){
   textFont(font2,48);
   text(MINIMUM_WORD_LENGTH,220,457);
   for(int i = 0; i < countedLanguages.length; i++){
-    text(languages[countedLanguages[i]],20,1130-i*55);
+    text(languages[countedLanguages[i]],20,1020-i*55);
   }
   fill(128);
   textFont(font,36);
-  text("Languages",20,1100-countedLanguages.length*55);
+  text("Languages",20,1000-countedLanguages.length*55);
 
 
   int ex = 1330;
@@ -216,7 +216,7 @@ void draw(){
 
   textFont(font2,36);
 
-  text("Keyboard Shortcuts",ex,840);
+  text("Keyboard Shortcuts",ex,740);
 
 
   textFont(font,36);
@@ -226,18 +226,18 @@ void draw(){
     fill(0);
   }
   if (stopOnError) {
-    text("1) Train Until Incorrect",ex,900);
+    text("1) Train Until Incorrect",ex,800);
   } else {
-    text("1) Toggle Training",ex,900);
+    text("1) Toggle Training",ex,800);
   }
   fill(128);
-  text("2) Perform one Training",ex,950);
-  text("3) Decrease Step Size",ex,1000);
-  text("4) Increase Step Size",ex,1050);
+  text("2) Perform one Training",ex,850);
+  text("3) Decrease Step Size",ex,900);
+  text("4) Increase Step Size",ex,950);
   if (stopOnError) {
     fill(0);
   }
-  text("5) Stop at Incorrect",ex,1100);
+  text("5) Stop at Incorrect",ex,1000);
   fill(128); // neutralise it basically if stop on error is enabled
 
   translate(550,40);
