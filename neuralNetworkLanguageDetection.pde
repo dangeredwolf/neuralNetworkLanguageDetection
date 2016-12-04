@@ -47,13 +47,14 @@ void setup(){
   font2 = loadFont("SegoeUI-Bold-48.vlw");
   int[] bls = {INPUT_LAYER_HEIGHT,MIDDLE_LAYER_NEURON_COUNT,OUTPUT_LAYER_HEIGHT};
   brain = new Brain(bls,INPUTS_PER_CHAR, languages);
-  int SIZEX = (int)(WINDOW_SCALE_SIZE * 1000);
-  int SIZEY = (int)(WINDOW_SCALE_SIZE * 580);
+  int SIZEX = (int)(WINDOW_SCALE_SIZE * 2000);
+  int SIZEY = (int)(WINDOW_SCALE_SIZE * 1160);
   size(1000, 580);
   if (processing3) {
     size(1000, 580);
     surface.setResizable(true);
     surface.setSize(SIZEX,SIZEY);
+    surface.setResizable(false);
   } else {
     size(SIZEX,SIZEY);
   }
