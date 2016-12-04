@@ -1,8 +1,9 @@
 float WINDOW_SCALE_SIZE = 0.5;
-int MINIMUM_WORD_LENGTH = 5;
+int MINIMUM_WORD_LENGTH = 4;
 float STARTING_AXON_VARIABILITY = 1.0;
-int TRAINS_PER_FRAME = 20;
+int TRAINS_PER_FRAME = 1000;
 PFont font;
+PFont font2;
 Brain brain;
 int LANGUAGE_COUNT = 13;
 int MIDDLE_LAYER_NEURON_COUNT = 19;
@@ -20,8 +21,10 @@ boolean training = false;
 String word = "-";
 int desiredOutput = 0;
 int lastPressedKey = -1;
-boolean typing = false;
-int[] countedLanguages = {2,8};
+boolean typing = false; 
+boolean stopOnError = false; 
+boolean stopTraining = false;
+int[] countedLanguages = {3,1};
 boolean lastOneWasCorrect = false;
 String[] languages = {"Random","Key Mash","English","Spanish","French","German","Japanese",
 "Swahili","Mandarin","Esperanto","Dutch","Polish","Lojban"};
@@ -35,10 +38,11 @@ void setup(){
   for(int i = 0; i < guessWindow; i++){
     recentGuesses[i] = false;
   }
-  font = loadFont("Helvetica-Bold-96.vlw"); 
+  font = loadFont("SegoeUI-Semibold-48.vlw"); 
+  font2 = loadFont("SegoeUI-Bold-48.vlw"); 
   int[] bls = {INPUT_LAYER_HEIGHT,MIDDLE_LAYER_NEURON_COUNT,OUTPUT_LAYER_HEIGHT};
   brain = new Brain(bls,INPUTS_PER_CHAR, languages);
-  size((int)(1920*WINDOW_SCALE_SIZE),(int)(1080*WINDOW_SCALE_SIZE));
+  size(1000,580);
   frameRate(200);
 }
 
@@ -55,6 +59,9 @@ void draw(){
       train();
     }else if(c == 52 && lastPressedKey != 52){
       brain.alpha *= 2;
+    }else if(c == 53 && lastPressedKey != 53){
+      stopOnError = !stopOnError;
+      stopTraining = false;
     }else if(c == 51 && lastPressedKey != 51){
       brain.alpha *= 0.5;
     }else if(c >= 97 && c <= 122 && !(lastPressedKey >= 97 && lastPressedKey <= 122)){
@@ -79,63 +86,115 @@ void draw(){
   }
   if(training){
     for(int i = 0; i < TRAINS_PER_FRAME; i++){
+      if (stopTraining) {
+        stopTraining = false;
+        training = false;
+        return;
+      }
       train();
     }
   }
   background(255);
   fill(0);
-  textFont(font,48);
+  textFont(font2,36);
   textAlign(LEFT);
-  text("Cary's Neural Net!",20,50);
-  text("Iteration #"+iteration,20,150);
-  text("Input word:",20,250);
-  fill(0,0,255);
-  text(word.toUpperCase(),20,300);
+  text("Language Neural Network",20,50);
+  fill(128);
+  textFont(font,36);
+  text("Iteration",20,150);
+  textFont(font2,48);
   fill(0);
-  text("Expected output:",20,350);
+  text(iteration,200,155);
+  fill(128);
+  textFont(font,36);
+  text("Input",20,250);
+  textFont(font2,48);
+  fill(0,120,255);
+  text(word,130,253);
+  fill(128);
+  textFont(font,36);
+  text("Output",20,350);
   String o = languages[desiredOutput];
   if(typing){
-    o = "???";
+    o = "Input";
   }
-  fill(0,0,255);
-  text(o,20,400);
+  fill(0,120,255);
+  textFont(font2,48);
+  text(o,155,355);
+  fill(128);
+  textFont(font,36);
+  text("Step",20,450);
+  textFont(font2,48);
   fill(0);
-  text("Step size:",20,500);
-  text(nf((float)(brain.alpha),0,4),20,550);
-  
-  text("Min Word Len: "+MINIMUM_WORD_LENGTH,20,650);
-  text("Possible Languages:",20,700);
+  text(nf((float)(brain.alpha),0,4),120,455);
+  fill(128);
+  textFont(font,36);
+  text("Min Length",20,550);
+  fill(0);
+  textFont(font2,48);
+  text(MINIMUM_WORD_LENGTH,220,557);
   for(int i = 0; i < countedLanguages.length; i++){
-    text(languages[countedLanguages[i]],20,750+i*50);
+    text(languages[countedLanguages[i]],20,1130-i*55);
   }
+  fill(128);
+  textFont(font,36);
+  text("Languages",20,1100-countedLanguages.length*55);
+  
   
   int ex = 1330;
-  text("Actual prediction:",ex,50);
+  text("Prediction",ex,55);
   String s = "";
-  if(typing){
-    s = "HOW'D I DO?";
+  
+  textFont(font2,48);
+  fill(0,120,255);
+  
+  text(languages[brain.topOutput],ex+190,60);
+  
+   if(typing){
+    s = "Did I get it?";
     fill(160,120,0);
   }else{
     if(lastOneWasCorrect){
-      s = "RIGHT";
-      fill(0,140,0);
+      s = "Correct";
+      fill(20,140,50);
     }else{
-      s = "WRONG";
-      fill(255,0,0);
+      s = "Incorrect";
+      fill(220,20,20);
     }
   }
-  text(languages[brain.topOutput]+" ("+s+")",ex,100);
+  
+  text(s,ex,150);
+  textFont(font2,36);  
+  if (brain.confidence > .55) {
+    fill(20,140,50);
+  } else if (brain.confidence > .15) {
+    fill(180,180,20);
+  } else {
+    fill(220,20,20);
+  }
+  
+  text(percentify(brain.confidence)+" Confident",ex,200);
+  fill(128);
+  
+  textFont(font,36);  
+  text("Correct of Last "+guessWindow+" Guesses",ex,290);
+  textFont(font2,48);  
   fill(0);
+  text(percentify(((float)recentRightCount)/min(iteration,guessWindow)),ex,350);
   
-  text("Confidence: "+percentify(brain.confidence),ex,150);
+  textFont(font2,36);
+ 
+  text("Keyboard Shortcuts",ex,840);
   
-  text("% of last "+guessWindow+" correct:",ex,250);
-  text(percentify(((float)recentRightCount)/min(iteration,guessWindow)),ex,300);
   
-  text("1 to toggle training.",ex,400);
-  text("2 to do one training.",ex,450);
-  text("3 to decrease step size.",ex,500);
-  text("4 to increase step size.",ex,550);
+  textFont(font,36);
+  fill(128);
+  
+  text("1) Toggle Training",ex,900);
+  text("2) Perform one Training",ex,950);
+  text("3) Decrease Step Size",ex,1000);
+  text("4) Increase Step Size",ex,1050);
+  text("5) Stop at Incorrect",ex,1100);
   
   translate(550,40);
   brain.drawBrain(55);
@@ -164,6 +223,9 @@ void train(){
     }
     recentGuesses[iteration%guessWindow] = false;
     lastOneWasCorrect = false;
+    if (stopOnError) {
+      stopTraining = true;
+    }
   }
 }
 int binarySearch(int lang, int n){

@@ -116,7 +116,7 @@ class Brain {
   public void drawBrain(float scaleUp){
     final float neuronSize = 0.4;
     noStroke();
-    fill(128);
+    fill(255);
     rect(-0.5*scaleUp,-0.5*scaleUp,(BRAIN_LAYER_SIZES.length*drawWidth-1)*scaleUp,MAX_HEIGHT*scaleUp);
     ellipseMode(RADIUS);
     strokeWeight(3);
@@ -136,7 +136,7 @@ class Brain {
           noStroke();
           int ay = apY(0,y);
           double val = neurons[0][y];
-          fill(255);
+          fill(180);
           ellipse(0,ay*scaleUp,neuronSize*scaleUp,neuronSize*scaleUp);
           fill(0);
           char c = '-';
@@ -192,11 +192,7 @@ class Brain {
     }
   }
   public color axonStrokeColor(double d){
-    if(d >= 0){
-      return color(255,255,255,(float)(d*255));
-    }else{
       return color(1,1,1,abs((float)(d*255)));
-    }
   }
   public color neuronFillColor(double d){
     return color((float)(d*255),(float)(d*255),(float)(d*255));
@@ -205,7 +201,7 @@ class Brain {
     if(d >= 0.5){
       return color(0,0,0);
     }else{
-      return color(255,255,255);
+      return color(200,200,200);
     }
   }
 }
