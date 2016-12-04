@@ -1,5 +1,5 @@
 float WINDOW_SCALE_SIZE = 0.5;
-int MINIMUM_WORD_LENGTH = 4;
+int MINIMUM_WORD_LENGTH = 5;
 float STARTING_AXON_VARIABILITY = 1.0;
 int TRAINS_PER_FRAME = 1000;
 PFont font;
@@ -43,7 +43,7 @@ void setup(){
   int[] bls = {INPUT_LAYER_HEIGHT,MIDDLE_LAYER_NEURON_COUNT,OUTPUT_LAYER_HEIGHT};
   brain = new Brain(bls,INPUTS_PER_CHAR, languages);
   size(1000,580);
-  frameRate(200);
+  frameRate(120);
 }
 
 void draw(){
