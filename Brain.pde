@@ -69,7 +69,7 @@ class Brain {
       }
     }
     if(mutate){
-      
+
       for(int y = 0; y < nonzero.length; y++){
         for(int z = 0; z < BRAIN_LAYER_SIZES[1]-1; z++){
           double delta = 0;
@@ -80,7 +80,7 @@ class Brain {
           axons[0][nonzero[y]][z] -= delta;
         }
       }
-      
+
       for(int y = 0; y < BRAIN_LAYER_SIZES[1]; y++){
         for(int z = 0; z < BRAIN_LAYER_SIZES[2]-1; z++){
           double delta = 2*(neurons[2][z]-desiredOutputs[z])*neurons[2][z]*

@@ -21,8 +21,8 @@ boolean training = false;
 String word = "-";
 int desiredOutput = 0;
 int lastPressedKey = -1;
-boolean typing = false; 
-boolean stopOnError = false; 
+boolean typing = false;
+boolean stopOnError = false;
 boolean stopTraining = false;
 int[] countedLanguages = {3,1};
 boolean lastOneWasCorrect = false;
@@ -38,8 +38,8 @@ void setup(){
   for(int i = 0; i < guessWindow; i++){
     recentGuesses[i] = false;
   }
-  font = loadFont("SegoeUI-Semibold-48.vlw"); 
-  font2 = loadFont("SegoeUI-Bold-48.vlw"); 
+  font = loadFont("SegoeUI-Semibold-48.vlw");
+  font2 = loadFont("SegoeUI-Bold-48.vlw");
   int[] bls = {INPUT_LAYER_HEIGHT,MIDDLE_LAYER_NEURON_COUNT,OUTPUT_LAYER_HEIGHT};
   brain = new Brain(bls,INPUTS_PER_CHAR, languages);
   size(1000,580);
@@ -139,17 +139,17 @@ void draw(){
   fill(128);
   textFont(font,36);
   text("Languages",20,1100-countedLanguages.length*55);
-  
-  
+
+
   int ex = 1330;
   text("Prediction",ex,55);
   String s = "";
-  
+
   textFont(font2,48);
   fill(0,120,255);
-  
+
   text(languages[brain.topOutput],ex+190,60);
-  
+
    if(typing){
     s = "Did I get it?";
     fill(160,120,0);
@@ -162,9 +162,9 @@ void draw(){
       fill(220,20,20);
     }
   }
-  
+
   text(s,ex,150);
-  textFont(font2,36);  
+  textFont(font2,36);
   if (brain.confidence > .55) {
     fill(20,140,50);
   } else if (brain.confidence > .15) {
@@ -172,30 +172,30 @@ void draw(){
   } else {
     fill(220,20,20);
   }
-  
+
   text(percentify(brain.confidence)+" Confident",ex,200);
   fill(128);
-  
-  textFont(font,36);  
+
+  textFont(font,36);
   text("Correct of Last "+guessWindow+" Guesses",ex,290);
-  textFont(font2,48);  
+  textFont(font2,48);
   fill(0);
   text(percentify(((float)recentRightCount)/min(iteration,guessWindow)),ex,350);
-  
+
   textFont(font2,36);
- 
+
   text("Keyboard Shortcuts",ex,840);
-  
-  
+
+
   textFont(font,36);
   fill(128);
-  
+
   text("1) Toggle Training",ex,900);
   text("2) Perform one Training",ex,950);
   text("3) Decrease Step Size",ex,1000);
   text("4) Increase Step Size",ex,1050);
   text("5) Stop at Incorrect",ex,1100);
-  
+
   translate(550,40);
   brain.drawBrain(55);
   lineAt++;
@@ -236,7 +236,7 @@ int binarySearch(int lang, int n, int beg, int end){
     return beg;
   }
   int mid = (beg+end)/2;
-  
+
   String s = trainingData[lang][mid];
   int diff = n-Integer.parseInt(s.substring(s.lastIndexOf(",")+1,s.length()));
   if(diff == 0){
